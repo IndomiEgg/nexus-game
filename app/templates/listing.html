@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% from "_macros.html" import section_head, feed_grid, trending_box %}
+{% block title %}{{ heading }} — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="layout">
+  <div>{{ section_head(heading) }}{{ feed_grid(cards, has_more, cat, q) }}</div>
+  {{ trending_box(trending) }}
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block robots %}noindex,nofollow{% endblock %}
+{% block content %}
+<form method="post" class="panel narrow">
+  <h1>Login Admin</h1>{{ csrf_field() }}
+  <label>Username<input name="username" required autofocus></label>
+  <label>Password<input name="password" type="password" required></label>
+  <button class="btn">Masuk</button>
+</form>
+{% endblock %}

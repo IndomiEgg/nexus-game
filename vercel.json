@@ -1,0 +1,3 @@
+{
+  "functions": {"wsgi.py": {"maxDuration": 60}}
+}

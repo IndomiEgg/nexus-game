@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block robots %}noindex,nofollow{% endblock %}
+{% block content %}
+<div class="panel">
+  <h1>Dashboard Admin</h1>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('admin.editor') }}">+ Artikel baru</a>
+    <form method="post" action="{{ url_for('admin.refresh') }}">{{ csrf_field() }}<button class="btn alt">Refresh RSS sekarang</button></form>
+    <a href="{{ url_for('admin.logout') }}">Keluar</a>
+  </div>
+  <div class="table-wrap"><table>
+    <tr><th>Judul</th><th>Kategori</th><th>Status</th><th>Dibaca</th><th>Aksi</th></tr>
+    {% for a in articles %}
+    <tr>
+      <td>{{ a.title }}</td><td>{{ a.category.name }}</td><td>{{ a.status }}{{ ' ★' if a.is_featured }}</td><td>{{ a.views }}</td>
+      <td class="row-actions">
+        <a href="{{ url_for('admin.editor', article_id=a.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('admin.toggle', article_id=a.id) }}">{{ csrf_field() }}<button>{{ 'Jadikan draft' if a.status == 'published' else 'Publish' }}</button></form>
+        <form method="post" action="{{ url_for('admin.delete', article_id=a.id) }}" onsubmit="return confirm('Hapus artikel ini?')">{{ csrf_field() }}<button class="danger">Hapus</button></form>
+      </td>
+    </tr>
+    {% else %}<tr><td colspan="5">Belum ada artikel.</td></tr>{% endfor %}
+  </table></div>
+</div>
+{% endblock %}

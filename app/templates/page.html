@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Tentang' if page == 'tentang' else 'Disclaimer' }} — {{ site_name }}{% endblock %}
+{% block content %}
+<article class="article"><div class="prose">
+{% if page == 'tentang' %}
+  <h1>Tentang {{ site_name }}</h1>
+  <p>{{ site_name }} adalah portal berita game yang menggabungkan berita terbaru dari berbagai sumber tepercaya dengan artikel orisinal dari redaksi: review, panduan, tips, dan opini.</p>
+{% else %}
+  <h1>Disclaimer</h1>
+  <p>Berita agregasi dikumpulkan dari sumber luar; hak cipta milik masing-masing sumber. Kami hanya menampilkan judul, ringkasan singkat, dan tautan menuju artikel asli.</p>
+{% endif %}
+</div></article>
+{% endblock %}

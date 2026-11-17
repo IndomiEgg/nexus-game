@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block robots %}noindex,nofollow{% endblock %}
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+<form method="post" class="panel" id="editor-form">
+  <h1>{{ 'Edit' if article else 'Artikel baru' }}</h1>{{ csrf_field() }}
+  <label>Judul<input name="title" value="{{ article.title if article }}" required></label>
+  <div class="two">
+    <label>Slug (kosongkan = otomatis)<input name="slug" value="{{ article.slug if article }}"></label>
+    <label>Kategori<select name="category_id">{% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if article and article.category_id == c.id }}>{{ c.name }}</option>{% endfor %}</select></label>
+  </div>
+  <div class="two">
+    <label>Tag (pisahkan koma)<input name="tags" value="{{ article.tags if article }}"></label>
+    <label>URL gambar sampul<input name="cover_url" value="{{ article.cover_url or '' if article }}"></label>
+  </div>
+  <label>Ringkasan (excerpt)<textarea name="excerpt" rows="2" maxlength="300">{{ article.excerpt if article }}</textarea></label>
+  <label>Isi artikel</label>
+  <div id="quill">{{ article.body|safe if article }}</div>
+  <input type="hidden" name="body" id="body">
+  <div class="two">
+    <label class="check"><input type="checkbox" name="is_featured" {{ 'checked' if article and article.is_featured }}> Headline (tampil di hero)</label>
+    <label>Status<select name="status"><option value="draft">Draft</option><option value="published" {{ 'selected' if article and article.status == 'published' }}>Published</option></select></label>
+  </div>
+  <button class="btn">Simpan</button> <a href="{{ url_for('admin.dashboard') }}">Batal</a>
+</form>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script>
+  const quill = new Quill("#quill", {theme: "snow", modules: {toolbar: {
+    container: [[{header: [2, 3, false]}], ["bold", "italic"], [{list: "ordered"}, {list: "bullet"}], ["blockquote", "link", "image"], ["clean"]],
+    handlers: {image() {
+      const url = prompt("URL gambar:");
+      if (url) this.quill.insertEmbed(this.quill.getSelection(true).index, "image", url);
+    }},
+  }}});
+  document.getElementById("editor-form").addEventListener("submit", () => {
+    document.getElementById("body").value = quill.root.innerHTML;
+  });
+</script>
+{% endblock %}

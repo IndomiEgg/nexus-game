@@ -1,0 +1,40 @@
+{% macro badge(category) %}<span class="badge" style="--h:{{ category.hue }}">{{ category.name }}</span>{% endmacro %}
+
+{% macro card(c) %}
+<a class="card reveal" href="{{ c.href }}"{% if c.external %} target="_blank" rel="noopener nofollow"{% endif %}>
+  <div class="thumb">
+    {% if c.image %}<img src="{{ c.image }}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">{% endif %}
+    {{ badge(c.category) }}
+  </div>
+  <div class="card-body">
+    <h3>{{ c.title }}</h3>
+    <p>{{ c.summary }}</p>
+    <small>
+      {% if c.original %}<span class="tag-og">Original</span>{% else %}<span class="src">Baca selengkapnya di {{ c.source }} ↗</span>{% endif %}
+      · {{ c.published_at|timeago }}
+    </small>
+  </div>
+</a>
+{% endmacro %}
+
+{% macro section_head(text, href=None) %}
+<div class="section-head"><h2>{{ text }}</h2>{% if href %}<a href="{{ href }}">Lihat semua →</a>{% endif %}</div>
+{% endmacro %}
+
+{% macro feed_grid(cards, has_more, cat="", q="") %}
+<div class="grid" id="feed-grid">
+  {% for c in cards %}{{ card(c) }}{% else %}<p class="empty">Belum ada berita untuk ditampilkan.</p>{% endfor %}
+</div>
+{% if has_more %}<button class="btn center" data-more data-target="feed-grid" data-cat="{{ cat }}" data-q="{{ q }}">Muat lebih banyak</button>{% endif %}
+{% endmacro %}
+
+{% macro trending_box(items) %}
+<aside class="side-box">
+  <h2>🔥 Trending</h2>
+  <ol>
+    {% for c in items %}
+    <li><a href="{{ c.href }}"{% if c.external %} target="_blank" rel="noopener nofollow"{% endif %}>{{ c.title }}<small>{{ c.original and 'Original' or c.source }} · {{ c.views }} klik</small></a></li>
+    {% endfor %}
+  </ol>
+</aside>
+{% endmacro %}

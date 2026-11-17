@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_macros.html" import card, badge, section_head, feed_grid, trending_box %}
+{% block content %}
+{% if hero %}
+{% set main = hero[0] %}
+<section class="hero">
+  <a class="hero-main reveal" href="{{ main.href }}"{% if main.external %} target="_blank" rel="noopener nofollow"{% endif %}>
+    {% if main.image %}<img src="{{ main.image }}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">{% endif %}
+    <div class="hero-text">{{ badge(main.category) }}<h1>{{ main.title }}</h1><p>{{ main.summary }}</p></div>
+  </a>
+  <div class="hero-side">{% for c in hero[1:] %}{{ card(c) }}{% endfor %}</div>
+</section>
+{% endif %}
+<div class="layout">
+  <div>
+    {% if originals %}{{ section_head("Artikel Orisinal") }}<div class="grid">{% for c in originals %}{{ card(c) }}{% endfor %}</div>{% endif %}
+    {{ section_head("Berita Terbaru") }}
+    {{ feed_grid(latest, has_more) }}
+    {% for cat_obj, cards in sections %}
+      {{ section_head(cat_obj.name, url_for('public.category', slug=cat_obj.slug)) }}
+      <div class="grid">{% for c in cards %}{{ card(c) }}{% endfor %}</div>
+    {% endfor %}
+  </div>
+  {{ trending_box(trending) }}
+</div>
+{% endblock %}

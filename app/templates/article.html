@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import card, badge, section_head %}
+{% block title %}{{ a.title }} — {{ site_name }}{% endblock %}
+{% block description %}{{ a.excerpt }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_image %}{% if a.cover_url %}<meta property="og:image" content="{{ a.cover_url }}">{% endif %}{% endblock %}
+{% block content %}
+<article class="article">
+  {{ badge(a.category) }}
+  <h1>{{ a.title }}</h1>
+  <small>{{ a.author }} · {{ a.published_at|datefmt }} · {{ a.reading_time }} menit baca · {{ a.views }} dibaca</small>
+  {% if a.cover_url %}<img class="cover" src="{{ a.cover_url }}" alt="">{% endif %}
+  <div class="prose">{{ a.body|safe }}</div>
+  <p class="tags">{% for t in a.tag_list %}<span>#{{ t }}</span>{% endfor %}</p>
+  <div class="share">Bagikan:
+    <a href="https://wa.me/?text={{ request.url|urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://twitter.com/intent/tweet?url={{ request.url|urlencode }}" target="_blank" rel="noopener">X</a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url|urlencode }}" target="_blank" rel="noopener">Facebook</a>
+  </div>
+</article>
+{% if related %}{{ section_head("Artikel Terkait") }}<div class="grid">{% for c in related %}{{ card(c) }}{% endfor %}</div>{% endif %}
+{% endblock %}
