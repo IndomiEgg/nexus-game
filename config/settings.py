@@ -10,7 +10,11 @@ load_dotenv(ROOT / ".env")
 
 
 def _normalize(url: str) -> str:
-    return url.replace("postgres://", "postgresql://", 1)
+    """Samakan awalan URL PostgreSQL agar selalu memakai driver psycopg2 yang terpasang."""
+    for prefix in ("postgres://", "postgresql://", "postgresql+psycopg://", "postgresql+psycopg2://"):
+        if url.startswith(prefix):
+            return "postgresql+psycopg2://" + url[len(prefix):]
+    return url
 
 
 def _database_url() -> str:
